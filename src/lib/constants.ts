@@ -2,7 +2,7 @@ export const SITE = {
   name: 'FRAMESTORY',
   tagline: 'Visual Narratives',
   description: 'Premium wedding and event photography in Trichy, Tamil Nadu. Capturing candid moments, traditional ceremonies, and timeless stories.',
-  url: 'https://framestory.vercel.app',
+  url: 'https://framestory-khaki.vercel.app',
 } as const;
 
 export const CONTACT = {
