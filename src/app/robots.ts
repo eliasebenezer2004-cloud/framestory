@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { SITE } from '@/lib/constants';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://heritage-lens.vercel.app/sitemap.xml',
+    sitemap: `${SITE.url}/sitemap.xml`,
   };
 }

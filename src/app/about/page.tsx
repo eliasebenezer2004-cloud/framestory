@@ -1,476 +1,162 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, Camera, Heart, Award, Users } from 'lucide-react';
+import { ArrowRight, Camera, Eye, Clock } from 'lucide-react';
 
-// Hero Section
-function AboutHero() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"]
-  });
+const philosophy = [
+  {
+    icon: Eye,
+    title: 'Unobtrusive Candid Focus',
+    description: 'We believe the best photos happen when you forget the camera is there. Our candid approach captures genuine emotions without interrupting your celebration.',
+  },
+  {
+    icon: Camera,
+    title: 'Cinematic Editing',
+    description: 'Every image is carefully graded and composed with a cinematic eye. We don\'t apply filters — we craft a visual language that makes your story timeless.',
+  },
+  {
+    icon: Clock,
+    title: 'Timeless Quality',
+    description: 'Trends come and go, but true artistry endures. We deliver photos that will look just as stunning fifty years from now as they do today.',
+  },
+];
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
+export default function AboutPage() {
   return (
-    <div ref={ref} className="relative h-screen flex items-center overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 diagonal-pattern" />
-      
-      {/* Large Background Text */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        <motion.span
-          style={{ y }}
-          className="text-[150px] md:text-[300px] font-display font-bold text-gold/[0.03] leading-none whitespace-nowrap"
-        >
-          ABOUT US
-        </motion.span>
-      </div>
-
-      {/* Content */}
-      <motion.div style={{ opacity }} className="max-w-[1800px] mx-auto px-6 md:px-12 w-full relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-7">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex items-center gap-3 mb-6"
-            >
-              <div className="w-12 h-[1px] bg-gold" />
-              <span className="text-gold text-sm tracking-[0.3em] uppercase font-medium">
-                Our Story
-              </span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[1] tracking-tight mb-8"
-            >
-              Where <span className="text-gradient">Tradition</span>
-              <br />
-              Meets Vision
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-cream/60 text-lg md:text-xl max-w-xl leading-relaxed"
-            >
-              Framestory was born from a simple belief: every celebration has a soul, 
-              and our job is to capture it. We blend traditional values with contemporary 
-              aesthetics to create timeless visual narratives.
-            </motion.p>
-          </div>
-
-          <div className="lg:col-span-5">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="relative"
-            >
-              <div className="absolute -inset-4 border border-gold/20 box-cut" />
-              <div className="relative aspect-[4/5] bg-warm-gray box-cut overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-maroon/30 to-charcoal/50" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Camera className="w-24 h-24 text-gold/20" />
-                </div>
-              </div>
-            </motion.div>
+    <main>
+      {/* Hero */}
+      <section className="relative h-[40vh] min-h-[300px] overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=1920&q=80"
+          alt="Framestory photography team in action at a wedding venue in Trichy"
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/40 to-transparent" />
+        <div className="absolute inset-0 flex items-end">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 pb-12">
+            <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-7xl font-bold text-[#FAFAFA]">
+              About Us
+            </h1>
           </div>
         </div>
-      </motion.div>
-    </div>
-  );
-}
+      </section>
 
-// Philosophy Section
-function Philosophy() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+      {/* Founder's Story */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Image */}
+            <div className="relative">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80"
+                  alt="Karthik Rajan, founder and lead photographer at Framestory"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 border-2 border-[#D4AF37]/30 rounded-sm -z-10" />
+            </div>
 
-  const values = [
-    {
-      title: "Authenticity",
-      description: "We believe in capturing real emotions, not staged moments. Every smile, every tear, every glance tells a story.",
-      icon: Heart,
-    },
-    {
-      title: "Artistry",
-      description: "Photography is our art form. We approach every event with the eye of an artist and the precision of a craftsman.",
-      icon: Camera,
-    },
-    {
-      title: "Heritage",
-      description: "We honor the rich traditions of Tamil Nadu while bringing a fresh, modern perspective to every celebration.",
-      icon: Award,
-    },
-    {
-      title: "Connection",
-      description: "We don't just document events; we build relationships. Understanding your story helps us capture it better.",
-      icon: Users,
-    },
-  ];
+            {/* Text */}
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-[1px] bg-[#D4AF37]" />
+                <span className="text-[#D4AF37] text-sm tracking-[0.3em] uppercase">The Founder&apos;s Story</span>
+              </div>
 
-  return (
-    <section ref={ref} className="relative py-32 bg-warm-gray noise-bg">
-      <div className="max-w-[1800px] mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          {/* Left - Title */}
-          <div className="lg:col-span-5">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6 }}
-              className="flex items-center gap-3 mb-4"
-            >
-              <div className="w-8 h-[1px] bg-gold" />
-              <span className="text-gold text-sm tracking-[0.3em] uppercase">Philosophy</span>
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-display text-4xl md:text-5xl font-bold mb-8"
-            >
-              What Drives <br />
-              <span className="text-gradient">Our Craft</span>
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-cream/60 leading-relaxed"
-            >
-              At Framestory, we approach every project with intention. 
-              Our philosophy is rooted in the belief that great photography 
-              requires both technical mastery and emotional intelligence.
-            </motion.p>
-          </div>
+              <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-[#FAFAFA] mb-8 leading-tight">
+                Hi, I&apos;m Karthik Rajan
+              </h2>
 
-          {/* Right - Values */}
-          <div className="lg:col-span-7">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {values.map((value, index) => (
-                <motion.div
-                  key={value.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-                  className="group p-8 bg-charcoal/50 border border-gold/10 box-cut hover:border-gold/30 transition-all duration-500"
-                >
-                  <div className="w-12 h-12 bg-gold/10 flex items-center justify-center mb-6 box-cut-sm group-hover:bg-gold/20 transition-colors duration-300">
-                    <value.icon className="w-6 h-6 text-gold" />
-                  </div>
-                  <h3 className="font-display text-xl font-bold mb-3 group-hover:text-gold transition-colors duration-300">
-                    {value.title}
-                  </h3>
-                  <p className="text-cream/50 text-sm leading-relaxed">
-                    {value.description}
-                  </p>
-                </motion.div>
-              ))}
+              <div className="space-y-4 text-[#F0F0F0]/60 text-lg leading-relaxed">
+                <p>
+                  I&apos;m obsessed with light, emotion, and the beautiful chaos of South Indian weddings.
+                  Growing up in Trichy, I watched countless ceremonies unfold — the vibrant silk sarees,
+                  the flickering oil lamps, the tears of joy, the uncontrollable laughter.
+                </p>
+                <p>
+                  I started Framestory because I realised that most photographers capture moments, but
+                  very few capture <em className="text-[#D4AF37]">feelings</em>. I wanted to create something
+                  different — images that make you feel the warmth of a mother&apos;s blessing, the excitement
+                  of a first look, the solemnity of sacred vows.
+                </p>
+                <p>
+                  Today, we&apos;re a small but passionate team based in Srirangam, Trichy. We&apos;ve had the
+                  honour of documenting over 500 celebrations across Tamil Nadu, and every single one
+                  has taught us something new about love, tradition, and the art of storytelling.
+                </p>
+              </div>
+
+              <div className="mt-8 flex items-center gap-4">
+                <div className="w-16 h-[1px] bg-[#D4AF37]/30" />
+                <span className="font-[family-name:var(--font-display)] text-[#D4AF37] italic text-lg">
+                  &ldquo;Every photo should feel like coming home.&rdquo;
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-// Journey Section
-function Journey() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+      {/* Philosophy */}
+      <section className="py-24 md:py-32 bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-8 h-[1px] bg-[#D4AF37]" />
+              <span className="text-[#D4AF37] text-sm tracking-[0.3em] uppercase">Our Philosophy</span>
+              <div className="w-8 h-[1px] bg-[#D4AF37]" />
+            </div>
+            <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-[#FAFAFA]">
+              Three Pillars of Our Craft
+            </h2>
+          </div>
 
-  const milestones = [
-    {
-      year: "2016",
-      title: "The Beginning",
-      description: "Started with a borrowed camera and a passion for storytelling. First wedding shoot at a small temple in Srirangam.",
-    },
-    {
-      year: "2018",
-      title: "First Major Break",
-      description: "Covered a 3-day wedding for a prominent family in Trichy. The photos went viral on social media.",
-    },
-    {
-      year: "2020",
-      title: "Studio Founded",
-      description: "Opened our first dedicated studio. Expanded team to 3 photographers and 2 videographers.",
-    },
-    {
-      year: "2022",
-      title: "Across Tamil Nadu",
-      description: "Expanded operations to cover events across Chennai, Madurai, Coimbatore, and beyond.",
-    },
-    {
-      year: "2024",
-      title: "Award Winning",
-      description: "Recognized as one of the top event photography studios in South India. 500+ events captured.",
-    },
-  ];
-
-  return (
-    <section ref={ref} className="relative py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 grid-pattern opacity-30" />
-      
-      <div className="max-w-[1800px] mx-auto px-6 md:px-12 relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="flex items-center justify-center gap-3 mb-4"
-          >
-            <div className="w-8 h-[1px] bg-gold" />
-            <span className="text-gold text-sm tracking-[0.3em] uppercase">Our Journey</span>
-            <div className="w-8 h-[1px] bg-gold" />
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-display text-4xl md:text-5xl font-bold"
-          >
-            A Decade of <span className="text-gradient">Stories</span>
-          </motion.h2>
-        </div>
-
-        {/* Timeline */}
-        <div className="relative">
-          {/* Vertical Line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-gold/20 hidden md:block" />
-
-          <div className="space-y-12">
-            {milestones.map((milestone, index) => (
-              <motion.div
-                key={milestone.year}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 + index * 0.15 }}
-                className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 items-center"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {philosophy.map((item) => (
+              <div
+                key={item.title}
+                className="bg-[#121212] border border-[#F0F0F0]/5 rounded-sm p-8 text-center hover:border-[#D4AF37]/20 transition-all duration-500"
               >
-                {/* Content - alternates sides */}
-                <div className={`${index % 2 !== 0 ? 'md:order-3 md:text-left' : 'md:text-right'}`}>
-                  <span className="font-mono text-gold text-sm">{milestone.year}</span>
-                  <h3 className="font-display text-2xl font-bold mt-2 mb-3">{milestone.title}</h3>
-                  <p className="text-cream/50 leading-relaxed">{milestone.description}</p>
+                <div className="w-16 h-16 mx-auto mb-6 bg-[#D4AF37]/10 rounded-full flex items-center justify-center">
+                  <item.icon className="w-7 h-7 text-[#D4AF37]" />
                 </div>
-
-                {/* Center Dot */}
-                <div className="hidden md:flex justify-center md:order-2">
-                  <div className="w-4 h-4 bg-gold box-cut-sm relative">
-                    <div className="absolute inset-0 bg-gold/30 animate-ping" />
-                  </div>
-                </div>
-
-                {/* Empty Space for alignment */}
-                <div className={`hidden md:block ${index % 2 !== 0 ? 'md:order-1' : 'md:order-3'}`} />
-              </motion.div>
+                <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-[#FAFAFA] mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-[#F0F0F0]/50 text-sm leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-// Team Section
-function Team() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const team = [
-    {
-      name: "Karthik Rajan",
-      role: "Founder & Lead Photographer",
-      description: "With over 8 years of experience, Karthik brings a unique blend of traditional and contemporary aesthetics to every project.",
-    },
-    {
-      name: "Divya Prakash",
-      role: "Creative Director",
-      description: "Divya's background in fine arts and cinematography adds a cinematic quality to our visual narratives.",
-    },
-    {
-      name: "Arun Kumar",
-      role: "Senior Photographer",
-      description: "Specializing in candid moments, Arun has an incredible eye for capturing emotions in their purest form.",
-    },
-  ];
-
-  return (
-    <section ref={ref} className="relative py-32 bg-warm-gray noise-bg">
-      <div className="max-w-[1800px] mx-auto px-6 md:px-12">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="flex items-center justify-center gap-3 mb-4"
-          >
-            <div className="w-8 h-[1px] bg-gold" />
-            <span className="text-gold text-sm tracking-[0.3em] uppercase">The Team</span>
-            <div className="w-8 h-[1px] bg-gold" />
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-display text-4xl md:text-5xl font-bold"
-          >
-            Meet the <span className="text-gradient">Artists</span>
-          </motion.h2>
-        </div>
-
-        {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {team.map((member, index) => (
-            <motion.div
-              key={member.name}
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 + index * 0.15 }}
-              className="group"
-            >
-              {/* Photo Placeholder */}
-              <div className="relative aspect-[3/4] bg-charcoal mb-6 box-cut overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Users className="w-16 h-16 text-gold/20" />
-                </div>
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </div>
-              
-              <h3 className="font-display text-xl font-bold mb-1 group-hover:text-gold transition-colors duration-300">
-                {member.name}
-              </h3>
-              <p className="text-gold/60 text-sm mb-3">{member.role}</p>
-              <p className="text-cream/50 text-sm leading-relaxed">{member.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Stats Section
-function Stats() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const stats = [
-    { number: "500+", label: "Events Covered" },
-    { number: "8+", label: "Years Experience" },
-    { number: "15+", label: "Team Members" },
-    { number: "50K+", label: "Photos Delivered" },
-    { number: "100%", label: "Client Satisfaction" },
-    { number: "25+", label: "Cities Covered" },
-  ];
-
-  return (
-    <section ref={ref} className="relative py-32 bg-maroon-dark overflow-hidden">
-      {/* Background Text */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <span className="text-[150px] md:text-[300px] font-display font-bold text-white/[0.02] leading-none">
-          NUMBERS
-        </span>
-      </div>
-
-      <div className="max-w-[1800px] mx-auto px-6 md:px-12 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="text-center"
-            >
-              <div className="font-display text-4xl md:text-5xl font-bold text-gold mb-2">
-                {stat.number}
-              </div>
-              <div className="text-cream/50 text-sm tracking-wider uppercase">
-                {stat.label}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// CTA Section
-function CTASection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  return (
-    <section ref={ref} className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 diagonal-pattern" />
-      
-      <div className="max-w-4xl mx-auto px-6 md:px-12 text-center relative z-10">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-display text-4xl md:text-5xl font-bold mb-8"
-        >
-          Ready to Tell <span className="text-gradient">Your Story?</span>
-        </motion.h2>
-        
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-cream/60 text-lg mb-12 max-w-2xl mx-auto"
-        >
-          We'd love to hear about your upcoming celebration. 
-          Let's create something beautiful together.
-        </motion.p>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
+      {/* CTA */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-[#FAFAFA] mb-6">
+            Let&apos;s Work Together
+          </h2>
+          <p className="text-[#F0F0F0]/60 text-lg mb-10">
+            Ready to tell your story? We&apos;d love to hear about your celebration.
+          </p>
           <Link
             href="/contact"
-            className="group inline-flex items-center gap-2 px-10 py-5 bg-gold text-charcoal font-bold text-sm tracking-wide box-cut hover:shadow-[0_0_40px_rgba(201,168,76,0.4)] transition-all duration-300"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-[#121212] font-bold text-sm tracking-wide rounded-sm hover:bg-[#E8C960] transition-all duration-300"
           >
             Get in Touch
-            <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-// Main About Page
-export default function About() {
-  return (
-    <main>
-      <AboutHero />
-      <Philosophy />
-      <Journey />
-      <Team />
-      <Stats />
-      <CTASection />
+        </div>
+      </section>
     </main>
   );
 }

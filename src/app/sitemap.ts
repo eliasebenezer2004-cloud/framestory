@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
+import { SITE } from '@/lib/constants';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://heritage-lens.vercel.app';
+  const baseUrl = SITE.url;
 
   return [
     {
