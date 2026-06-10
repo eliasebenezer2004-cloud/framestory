@@ -259,26 +259,24 @@ function Journey() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.2 + index * 0.15 }}
-                className={`grid grid-cols-1 md:grid-cols-2 gap-8 items-center ${
-                  index % 2 === 0 ? '' : 'md:direction-rtl'
-                }`}
+                className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 items-center"
               >
-                {/* Content */}
-                <div className={`${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                {/* Content - alternates sides */}
+                <div className={`${index % 2 !== 0 ? 'md:order-3 md:text-left' : 'md:text-right'}`}>
                   <span className="font-mono text-gold text-sm">{milestone.year}</span>
                   <h3 className="font-display text-2xl font-bold mt-2 mb-3">{milestone.title}</h3>
                   <p className="text-cream/50 leading-relaxed">{milestone.description}</p>
                 </div>
 
                 {/* Center Dot */}
-                <div className="hidden md:flex justify-center">
+                <div className="hidden md:flex justify-center md:order-2">
                   <div className="w-4 h-4 bg-gold box-cut-sm relative">
                     <div className="absolute inset-0 bg-gold/30 animate-ping" />
                   </div>
                 </div>
 
-                {/* Empty Space */}
-                <div className="hidden md:block" />
+                {/* Empty Space for alignment */}
+                <div className={`hidden md:block ${index % 2 !== 0 ? 'md:order-1' : 'md:order-3'}`} />
               </motion.div>
             ))}
           </div>

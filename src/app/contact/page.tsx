@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowUpRight, Mail, Phone, MapPin, Globe, Play, Send, Check } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe, Play, Send, Check } from 'lucide-react';
 
 // Magnetic Button Component
 function MagneticButton({ children, className, href }: { children: React.ReactNode; className?: string; href?: string }) {
@@ -219,9 +219,9 @@ function ContactForm() {
                   />
                 </div>
 
-                <MagneticButton
-                  href="#"
-                  className="group inline-flex items-center gap-2 px-10 py-5 bg-gold text-charcoal font-bold text-sm tracking-wide box-cut hover:shadow-[0_0_40px_rgba(201,168,76,0.4)] transition-all duration-300"
+                <button
+                  type="submit"
+                  className="group inline-flex items-center gap-2 px-10 py-5 bg-gold text-charcoal font-bold text-sm tracking-wide box-cut hover:shadow-[0_0_40px_rgba(201,168,76,0.4)] transition-all duration-300 cursor-pointer"
                 >
                   {isSubmitted ? (
                     <>
@@ -234,7 +234,7 @@ function ContactForm() {
                       <Send className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </>
                   )}
-                </MagneticButton>
+                </button>
               </form>
             </motion.div>
           </div>

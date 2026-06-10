@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowUpRight, X, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
@@ -221,17 +221,39 @@ function ProjectCard({ project, index, onClick }: { project: typeof projects[0];
 
 // Lightbox
 function Lightbox({ project, onClose, onNext, onPrev }: { project: typeof projects[0]; onClose: () => void; onNext: () => void; onPrev: () => void }) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+    document.body.style.overflow = 'hidden';
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') onNext();
+      if (e.key === 'ArrowLeft') onPrev();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [onClose, onNext, onPrev]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${project.title} - ${project.category}`}
       className="fixed inset-0 z-50 bg-charcoal/98 backdrop-blur-xl flex items-center justify-center"
       onClick={onClose}
     >
       {/* Close Button */}
       <button
+        ref={closeButtonRef}
         onClick={onClose}
+        aria-label="Close lightbox"
         className="absolute top-6 right-6 w-12 h-12 border border-gold/30 box-cut-sm flex items-center justify-center text-cream hover:bg-gold hover:text-charcoal transition-all duration-300 z-10"
       >
         <X className="w-5 h-5" />
@@ -240,12 +262,14 @@ function Lightbox({ project, onClose, onNext, onPrev }: { project: typeof projec
       {/* Navigation */}
       <button
         onClick={(e) => { e.stopPropagation(); onPrev(); }}
+        aria-label="Previous image"
         className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 border border-gold/30 box-cut-sm flex items-center justify-center text-cream hover:bg-gold hover:text-charcoal transition-all duration-300 z-10"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); onNext(); }}
+        aria-label="Next image"
         className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 border border-gold/30 box-cut-sm flex items-center justify-center text-cream hover:bg-gold hover:text-charcoal transition-all duration-300 z-10"
       >
         <ChevronRight className="w-5 h-5" />
@@ -280,7 +304,7 @@ function Lightbox({ project, onClose, onNext, onPrev }: { project: typeof projec
             {project.description}
           </p>
           <div className="flex items-center gap-4 text-sm text-cream/40">
-            <span>📍 {project.location}</span>
+            <span>{project.location}</span>
           </div>
         </div>
       </motion.div>

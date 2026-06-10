@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowUpRight, Play, ChevronDown } from 'lucide-react';
+import { ArrowUpRight, ChevronDown } from 'lucide-react';
 
 // Animated Hero Component
 function AnimatedHero() {
@@ -328,7 +328,7 @@ function MarqueeSection() {
   return (
     <section className="py-12 bg-charcoal border-y border-gold/10 overflow-hidden">
       <div className="animate-marquee whitespace-nowrap">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(4)].map((_, i) => (
           <span
             key={i}
             className="inline-block text-4xl md:text-6xl font-display font-bold text-stroke-gold mx-8"

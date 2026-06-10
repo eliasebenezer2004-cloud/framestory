@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { Mail, ArrowUpRight, Heart, Globe, Play } from 'lucide-react';
 
 const footerLinks = {
@@ -164,7 +163,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="py-6 border-t border-gold/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-cream/30 text-xs">
-            © 2024 Framestory. All rights reserved.
+            © {new Date().getFullYear()} Framestory. All rights reserved.
           </p>
           <p className="text-cream/30 text-xs flex items-center gap-1">
             Crafted with <Heart className="w-3 h-3 text-maroon fill-maroon" /> in Tamil Nadu
