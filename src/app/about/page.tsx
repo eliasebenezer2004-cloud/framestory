@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Camera, Eye, Clock } from 'lucide-react';
+import { useScrollReveal, useImageReveal, useStaggerReveal, useParallax, useLineDraw } from '@/hooks/useScrollReveal';
 
 const philosophy = [
   {
@@ -23,6 +24,13 @@ const philosophy = [
 ];
 
 export default function AboutPage() {
+  const imageRevealRef = useImageReveal();
+  const founderTextRef = useScrollReveal();
+  const philosophyRef = useStaggerReveal(0.12);
+  const ctaRef = useScrollReveal();
+  const parallaxRef = useParallax(0.15);
+  const lineDrawRef = useLineDraw();
+
   return (
     <main>
       {/* Hero */}
@@ -47,13 +55,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Founder's Story */}
+      {/* Founder's Story — Parallax + Image Reveal + Text Reveal */}
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            {/* Image */}
-            <div className="relative">
-              <div className="relative aspect-[4/5] overflow-hidden">
+            {/* Image with parallax + clip reveal */}
+            <div ref={imageRevealRef} className="relative">
+              <div ref={parallaxRef} className="relative aspect-[4/5] overflow-hidden" data-clip-reveal>
                 <Image
                   src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80"
                   alt="Karthik Rajan, founder and lead photographer at Framestory"
@@ -67,18 +75,18 @@ export default function AboutPage() {
               <div className="hidden lg:block absolute -bottom-4 -left-4 w-24 h-24 border-2 border-[#D4AF37]/20 -z-10" />
             </div>
 
-            {/* Text */}
-            <div>
-              <div className="flex items-center gap-3 mb-6">
+            {/* Text with scroll reveal */}
+            <div ref={founderTextRef}>
+              <div className="flex items-center gap-3 mb-6" data-reveal>
                 <div className="w-8 h-[1px] bg-[#D4AF37]" />
                 <span className="text-[#D4AF37] text-sm tracking-[0.3em] uppercase">The Founder&apos;s Story</span>
               </div>
 
-              <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-8 leading-tight">
+              <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-8 leading-tight" data-reveal>
                 Hi, I&apos;m Karthik Rajan
               </h2>
 
-              <div className="space-y-4 text-[#F0F0F0]/60 text-lg leading-relaxed">
+              <div className="space-y-4 text-[#F0F0F0]/60 text-lg leading-relaxed" data-reveal>
                 <p>
                   I&apos;m obsessed with light, emotion, and the beautiful chaos of South Indian weddings.
                   Growing up in Trichy, I watched countless ceremonies unfold — the vibrant silk sarees,
@@ -97,20 +105,20 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              {/* Quote */}
-              <div className="mt-10 md:mt-12 text-center lg:text-left">
-                <div className="w-16 h-[1px] bg-[#D4AF37]/30 mx-auto lg:mx-0 mb-6" />
+              {/* Quote with line-draw animation */}
+              <div ref={lineDrawRef} className="mt-10 md:mt-12 text-center lg:text-left" data-reveal>
+                <div className="w-16 h-[1px] bg-[#D4AF37]/30 mx-auto lg:mx-0 mb-6 line-draw" />
                 <span className="font-[family-name:var(--font-display)] text-[#D4AF37] italic text-xl md:text-2xl">
                   &ldquo;Every photo should feel like coming home.&rdquo;
                 </span>
-                <div className="w-16 h-[1px] bg-[#D4AF37]/30 mx-auto lg:mx-0 mt-6" />
+                <div className="w-16 h-[1px] bg-[#D4AF37]/30 mx-auto lg:mx-0 mt-6 line-draw" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Philosophy */}
+      {/* Philosophy — Staggered entrance */}
       <section className="py-16 md:py-24 bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-12 md:mb-16">
@@ -124,7 +132,7 @@ export default function AboutPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div ref={philosophyRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {philosophy.map((item) => (
               <div
                 key={item.title}
@@ -147,16 +155,17 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section className="py-16 md:py-24">
-        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6">
+        <div ref={ctaRef} className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6" data-reveal>
             Let&apos;s Work Together
           </h2>
-          <p className="text-[#F0F0F0]/60 text-lg mb-10">
+          <p className="text-[#F0F0F0]/60 text-lg mb-10" data-reveal>
             Ready to tell your story? We&apos;d love to hear about your celebration.
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-[#121212] font-bold text-sm tracking-wide hover:bg-[#E8C960] transition-all duration-300"
+            data-reveal
           >
             Get in Touch
             <ArrowRight className="w-4 h-4" />

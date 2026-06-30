@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { SITE, CONTACT } from "@/lib/constants";
+import ClientProviders from "@/components/ClientProviders";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -100,27 +101,9 @@ const jsonLd = {
     "@type": "OfferCatalog",
     name: "Photography Services",
     itemListElement: [
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Premium Wedding Photography",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Event Photography",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Pre-Wedding Shoots",
-        },
-      },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Premium Wedding Photography" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Event Photography" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pre-Wedding Shoots" } },
     ],
   },
 };
@@ -139,10 +122,12 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <ClientProviders>
+          <Navigation />
+          <main>{children}</main>
+          <Footer />
+          <WhatsAppButton />
+        </ClientProviders>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Phone, MapPin, Clock, Send } from 'lucide-react';
 import { CONTACT } from '@/lib/constants';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 const eventTypes = [
   'Wedding',
@@ -27,6 +28,9 @@ export default function ContactPage() {
   });
   const [submitted, setSubmitted] = useState(false);
 
+  const infoRef = useScrollReveal();
+  const formRef = useScrollReveal();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
@@ -37,24 +41,24 @@ export default function ContactPage() {
       {/* Split Screen Section */}
       <section className="pt-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-80px)]">
-          {/* Left - Information */}
+          {/* Left - Information — Scroll reveal */}
           <div className="bg-[#0A0A0A] flex items-center justify-center p-8 md:p-12 lg:p-16">
-            <div className="max-w-md w-full">
-              <div className="flex items-center gap-3 mb-6">
+            <div ref={infoRef} className="max-w-md w-full">
+              <div className="flex items-center gap-3 mb-6" data-reveal>
                 <div className="w-8 h-[1px] bg-[#D4AF37]" />
                 <span className="text-[#D4AF37] text-sm tracking-[0.3em] uppercase">Contact</span>
               </div>
 
-              <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6 md:mb-8 leading-tight">
+              <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6 md:mb-8 leading-tight" data-reveal>
                 Let&apos;s Tell Your Story
               </h1>
 
-              <p className="text-[#F0F0F0]/60 text-lg leading-relaxed mb-8 md:mb-10">
+              <p className="text-[#F0F0F0]/60 text-lg leading-relaxed mb-8 md:mb-10" data-reveal>
                 Have a celebration coming up? We&apos;d love to hear about it.
                 Reach out and let&apos;s create something beautiful together.
               </p>
 
-              <div className="space-y-5">
+              <div className="space-y-5" data-reveal>
                 <a
                   href={`tel:${CONTACT.phone}`}
                   className="flex items-center gap-4 text-[#F0F0F0]/70 hover:text-[#D4AF37] transition-colors duration-300 group"
@@ -108,9 +112,9 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right - Form */}
+          {/* Right - Form — Scroll reveal with stagger */}
           <div className="flex items-center justify-center p-8 md:p-12 lg:p-16">
-            <div className="max-w-md w-full">
+            <div ref={formRef} className="max-w-md w-full">
               {submitted ? (
                 <div className="text-center py-16">
                   <div className="w-16 h-16 mx-auto mb-6 bg-[#D4AF37]/10 rounded-full flex items-center justify-center">
@@ -125,7 +129,7 @@ export default function ContactPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-                  <div>
+                  <div data-reveal>
                     <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-bold text-[#FAFAFA] mb-2">
                       Book a Session
                     </h2>
@@ -134,7 +138,7 @@ export default function ContactPage() {
                     </p>
                   </div>
 
-                  <div>
+                  <div data-reveal>
                     <label className="text-xs text-[#F0F0F0]/40 uppercase tracking-wider block mb-2">Your Name</label>
                     <input
                       type="text"
@@ -146,7 +150,7 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <div>
+                  <div data-reveal>
                     <label className="text-xs text-[#F0F0F0]/40 uppercase tracking-wider block mb-2">Phone Number</label>
                     <input
                       type="tel"
@@ -158,7 +162,7 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <div>
+                  <div data-reveal>
                     <label className="text-xs text-[#F0F0F0]/40 uppercase tracking-wider block mb-2">Event Date</label>
                     <input
                       type="date"
@@ -168,7 +172,7 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <div>
+                  <div data-reveal>
                     <label className="text-xs text-[#F0F0F0]/40 uppercase tracking-wider block mb-2">Event Type</label>
                     <select
                       className="input-bottom-border bg-transparent"
@@ -182,7 +186,7 @@ export default function ContactPage() {
                     </select>
                   </div>
 
-                  <div>
+                  <div data-reveal>
                     <label className="text-xs text-[#F0F0F0]/40 uppercase tracking-wider block mb-2">Event Venue</label>
                     <input
                       type="text"
@@ -193,7 +197,7 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <div>
+                  <div data-reveal>
                     <label className="text-xs text-[#F0F0F0]/40 uppercase tracking-wider block mb-2">Tell Us About Your Event</label>
                     <textarea
                       rows={3}
@@ -207,6 +211,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     className="w-full py-4 bg-[#D4AF37] text-[#121212] font-bold text-sm tracking-wide hover:bg-[#E8C960] transition-all duration-300 flex items-center justify-center gap-2"
+                    data-reveal
                   >
                     Check Availability
                     <Send className="w-4 h-4" />

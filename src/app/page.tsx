@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { CONTACT } from '@/lib/constants';
+import AnimatedCounter from '@/components/AnimatedCounter';
+import { useScrollReveal, useImageReveal, useStaggerReveal } from '@/hooks/useScrollReveal';
 
 const heroImages = [
   { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=85', alt: 'Traditional Tamil Hindu Wedding in Trichy' },
@@ -44,8 +46,43 @@ const testimonials = [
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const heroTextRef = useRef<HTMLDivElement>(null);
+  const heroDivRef = useRef<HTMLDivElement>(null);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  // Hero text stagger animation
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!heroTextRef.current) return;
+
+    let cancelled = false;
+    const animate = async () => {
+      const gsapModule = await import('gsap');
+      const gsap = gsapModule.default;
+
+      if (cancelled || !heroTextRef.current) return;
+      const chars = heroTextRef.current.querySelectorAll('.hero-word');
+      if (!chars || chars.length === 0) return;
+
+      gsap.fromTo(
+        chars,
+        { opacity: 0, y: 40, rotateX: -20 },
+        {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 0.7,
+          stagger: 0.08,
+          ease: 'power3.out',
+          delay: 1.8,
+        }
+      );
+    };
+
+    animate();
+    return () => { cancelled = true; };
+  }, []);
 
   // Hero slideshow
   useEffect(() => {
@@ -55,12 +92,29 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Parallax scroll
+  // Parallax scroll — uses ref for performance (no React re-render)
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
+    const handleScroll = () => {
+      if (heroDivRef.current) {
+        heroDivRef.current.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+      }
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Testimonial auto-rotate
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Scroll reveal refs
+  const aboutImageRef = useImageReveal();
+  const aboutTextRef = useScrollReveal();
+  const ctaRef = useScrollReveal();
 
   const scrollToFeatured = (direction: 'left' | 'right') => {
     const container = scrollContainerRef.current;
@@ -72,11 +126,12 @@ export default function Home() {
     });
   };
 
+  const heroWords = "Capturing Trichy's Most Beautiful Stories".split(' ');
+
   return (
     <main>
       {/* Hero Section */}
       <section className="relative h-screen overflow-hidden">
-        {/* Background Slideshow */}
         {heroImages.map((img, index) => (
           <div
             key={index}
@@ -97,13 +152,11 @@ export default function Home() {
           </div>
         ))}
 
-        {/* Dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/30 to-transparent" />
 
-        {/* Content */}
         <div
+          ref={heroDivRef}
           className="absolute inset-0 flex items-center"
-          style={{ transform: `translateY(${scrollY * 0.3}px)` }}
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
             <div className="max-w-2xl">
@@ -114,9 +167,15 @@ export default function Home() {
                 </span>
               </div>
 
-              <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-7xl lg:text-8xl font-bold text-[#FAFAFA] leading-[0.95] mb-6">
-                Capturing Trichy&apos;s Most Beautiful Stories
-              </h1>
+              <div ref={heroTextRef}>
+                <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-7xl lg:text-8xl font-bold text-[#FAFAFA] leading-[0.95] mb-6">
+                  {heroWords.map((word, i) => (
+                    <span key={i} className="hero-word inline-block mr-[0.25em]">
+                      {word}
+                    </span>
+                  ))}
+                </h1>
+              </div>
 
               <p className="text-[#F0F0F0]/70 text-lg md:text-xl max-w-lg mb-10 leading-relaxed">
                 Premium Wedding & Event Photography. We don&apos;t just take photos.
@@ -149,7 +208,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust Bar */}
+      {/* Trust Bar — Animated Counters */}
       <section className="py-5 bg-[#0A0A0A] border-y border-[#F0F0F0]/5">
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-wrap items-center justify-center gap-6 md:gap-12">
           <div className="flex items-center gap-2">
@@ -158,23 +217,26 @@ export default function Home() {
                 <Star key={i} className="w-3.5 h-3.5 fill-[#D4AF37] text-[#D4AF37]" />
               ))}
             </div>
-            <span className="text-[#F0F0F0]/70 text-sm font-medium">Rated 4.9/5 on Google</span>
+            <span className="text-[#F0F0F0]/70 text-sm font-medium">
+              Rated <AnimatedCounter target={4.9} suffix="/5" duration={1.5} decimals={1} /> on Google
+            </span>
           </div>
-          <div className="text-[#F0F0F0]/30 text-sm">Trusted by 500+ families across Tamil Nadu</div>
+          <div className="text-[#F0F0F0]/30 text-sm">
+            Trusted by <AnimatedCounter target={500} suffix="+" duration={2} /> families across Tamil Nadu
+          </div>
           <div className="text-[#F0F0F0]/30 text-sm">Srirangam &bull; Trichy &bull; Tamil Nadu</div>
         </div>
       </section>
 
-      {/* About Snippet */}
+      {/* About Snippet — Image Clip Reveal + Text Reveal */}
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            {/* Image */}
-            <div className="relative">
-              <div className="relative aspect-[4/5] overflow-hidden">
+            <div ref={aboutImageRef} className="relative">
+              <div className="relative aspect-[4/5] overflow-hidden" data-clip-reveal>
                 <Image
                   src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80"
-                  alt="Karthik Rajan, lead photographer at Framestory, capturing a wedding moment"
+                  alt="Karthik Rajan, lead photographer at Framestory"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -182,27 +244,25 @@ export default function Home() {
                   blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23121212'/%3E%3C/svg%3E"
                 />
               </div>
-              {/* Decorative accent - only on desktop */}
               <div className="hidden lg:block absolute -bottom-4 -right-4 w-24 h-24 border-2 border-[#D4AF37]/20 -z-10" />
             </div>
 
-            {/* Text */}
-            <div>
-              <div className="flex items-center gap-3 mb-6">
+            <div ref={aboutTextRef}>
+              <div className="flex items-center gap-3 mb-6" data-reveal>
                 <div className="w-8 h-[1px] bg-[#D4AF37]" />
                 <span className="text-[#D4AF37] text-sm tracking-[0.3em] uppercase">Our Story</span>
               </div>
-              <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6 leading-tight">
+              <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6 leading-tight" data-reveal>
                 Photography isn&apos;t just taking pictures
               </h2>
-              <p className="text-[#F0F0F0]/60 text-lg leading-relaxed mb-8">
+              <p className="text-[#F0F0F0]/60 text-lg leading-relaxed mb-8" data-reveal>
                 It&apos;s preserving the soul of a moment. At Framestory, we believe every wedding,
-                every ceremony, every celebration has a story waiting to be told. We&apos;re here to tell it
-                through our lens with authenticity, artistry, and a deep respect for tradition.
+                every ceremony, every celebration has a story waiting to be told.
               </p>
               <Link
                 href="/about"
                 className="inline-flex items-center gap-2 text-[#D4AF37] text-sm font-medium tracking-wide hover:gap-3 transition-all duration-300"
+                data-reveal
               >
                 Read Our Story
                 <ArrowRight className="w-4 h-4" />
@@ -212,7 +272,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Portfolio - Horizontal Scroll */}
+      {/* Featured Portfolio — Horizontal Scroll */}
       <section className="py-16 md:py-24 bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto px-6 md:px-12 mb-10">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between">
@@ -244,7 +304,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Horizontal scroll container */}
         <div className="relative">
           <div
             ref={scrollContainerRef}
@@ -256,10 +315,11 @@ export default function Home() {
                 key={project.title}
                 className="flex-shrink-0 w-[75vw] md:w-[55vw] lg:w-[40vw] h-[350px] md:h-[450px] relative overflow-hidden group cursor-pointer"
                 style={{ scrollSnapAlign: 'start' }}
+                data-cursor-text="View"
               >
                 <Image
                   src={project.image}
-                  alt={`${project.title} - ${project.category} photography by Framestory in Trichy`}
+                  alt={`${project.title} - ${project.category} photography by Framestory`}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="80vw"
@@ -287,7 +347,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Testimonials — Desktop grid + Mobile carousel */}
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-12 md:mb-16">
@@ -301,7 +361,8 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {/* Desktop: grid view */}
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {testimonials.map((t) => (
               <div
                 key={t.name}
@@ -320,28 +381,78 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          {/* Mobile: carousel */}
+          <div className="md:hidden">
+            <div className="relative overflow-hidden">
+              <div
+                className="flex transition-transform duration-700 ease-out"
+                style={{ transform: `translateX(-${activeTestimonial * 100}%)` }}
+              >
+                {testimonials.map((t) => (
+                  <div
+                    key={t.name}
+                    className="w-full flex-shrink-0 bg-[#1A1A1A] p-6 border-l-2 border-[#D4AF37]/40"
+                  >
+                    <div className="flex gap-0.5 mb-4">
+                      {[...Array(t.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
+                      ))}
+                    </div>
+                    <p className="text-[#F0F0F0]/70 leading-relaxed mb-6">&ldquo;{t.text}&rdquo;</p>
+                    <div className="border-t border-[#F0F0F0]/10 pt-4">
+                      <p className="font-[family-name:var(--font-display)] font-bold text-[#FAFAFA]">{t.name}</p>
+                      <p className="text-[#D4AF37]/70 text-sm">{t.event}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-3 mt-6">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTestimonial(index)}
+                  className={`h-[2px] transition-all duration-500 ${
+                    index === activeTestimonial ? 'bg-[#D4AF37] w-10' : 'bg-[#F0F0F0]/30 w-6'
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-[#0A0A0A]">
-        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
+      {/* CTA Section — Background image */}
+      <section className="relative py-16 md:py-24 bg-[#0A0A0A] overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <Image
+            src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=60"
+            alt=""
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
+        </div>
+        <div className="absolute inset-0 bg-[#0A0A0A]/80" />
+        <div ref={ctaRef} className="relative max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <div className="flex items-center justify-center gap-3 mb-4" data-reveal>
             <div className="w-8 h-[1px] bg-[#D4AF37]" />
             <span className="text-[#D4AF37] text-sm tracking-[0.3em] uppercase">Ready to Begin?</span>
             <div className="w-8 h-[1px] bg-[#D4AF37]" />
           </div>
 
-          <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-5xl lg:text-6xl font-bold text-[#FAFAFA] mb-6">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-5xl lg:text-6xl font-bold text-[#FAFAFA] mb-6" data-reveal>
             Let&apos;s Tell Your Story
           </h2>
 
-          <p className="text-[#F0F0F0]/60 text-lg mb-10 max-w-2xl mx-auto">
+          <p className="text-[#F0F0F0]/60 text-lg mb-10 max-w-2xl mx-auto" data-reveal>
             Every celebration is unique. Let&apos;s discuss yours and create something
             that will be cherished for generations.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4" data-reveal>
             <Link
               href="/contact"
               className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D4AF37] text-[#121212] font-bold text-sm tracking-wide hover:bg-[#E8C960] transition-all duration-300"

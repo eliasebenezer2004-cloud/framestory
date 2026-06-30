@@ -25,7 +25,7 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     background-color: var(--color-charcoal);
   }
 
@@ -229,8 +229,120 @@
   }
 }
 
+/* ===== CUSTOM CURSOR ===== */
+.custom-cursor {
+  pointer-events: none;
+  position: fixed;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+.cursor-ring {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(240, 240, 240, 0.5);
+  border-radius: 50%;
+  transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, margin 0.3s ease;
+}
+
+.cursor-ring.cursor-hover {
+  width: 60px;
+  height: 60px;
+  border-color: var(--color-gold);
+  margin-left: -10px;
+  margin-top: -10px;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+}
+
+.cursor-dot.cursor-hover-dot {
+  width: 6px;
+  height: 6px;
+  opacity: 0.6;
+  margin-left: 1px;
+  margin-top: 1px;
+}
+
+.cursor-text-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  font-weight: 500;
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== PAGE TRANSITION ===== */
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: pageSlideIn 0.6s var(--ease-smooth) forwards;
+}
+
+/* ===== HERO TEXT STAGGER ===== */
+.hero-word {
+  display: inline-block;
+  overflow: hidden;
+}
+
+/* ===== SCROLL REVEAL LINE DRAW ===== */
+@keyframes lineDraw {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.line-draw {
+  width: 0;
+}
+
+.line-draw.active {
+  animation: lineDraw 1s var(--ease-smooth) forwards;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .ken-burns {
+    animation: none !important;
+    transform: scale(1.02) !important;
+  }
+
+  .whatsapp-pulse {
+    animation: none !important;
   }
 }

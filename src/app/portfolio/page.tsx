@@ -2,7 +2,8 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { useStaggerReveal } from '@/hooks/useScrollReveal';
 
 const categories = ['All', 'Weddings', 'Pre-Wedding', 'Puberty Functions', 'Seemantham', 'Candid'] as const;
 
@@ -34,25 +35,39 @@ const projects: Project[] = [
 export default function PortfolioPage() {
   const [activeFilter, setActiveFilter] = useState<Category>('All');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [lightboxZoom, setLightboxZoom] = useState(1);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const gridRef = useStaggerReveal(0.06);
 
   const filtered = activeFilter === 'All'
     ? projects
     : projects.filter((p) => p.category === activeFilter);
 
-  const openLightbox = (index: number) => setLightboxIndex(index);
-  const closeLightbox = () => setLightboxIndex(null);
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxZoom(1);
+  };
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+    setLightboxZoom(1);
+  };
 
   const nextImage = useCallback(() => {
     if (lightboxIndex === null) return;
     setLightboxIndex((prev) => (prev! + 1) % filtered.length);
+    setLightboxZoom(1);
   }, [lightboxIndex, filtered.length]);
 
   const prevImage = useCallback(() => {
     if (lightboxIndex === null) return;
     setLightboxIndex((prev) => (prev! - 1 + filtered.length) % filtered.length);
+    setLightboxZoom(1);
   }, [lightboxIndex, filtered.length]);
+
+  const toggleZoom = () => {
+    setLightboxZoom((prev) => (prev === 1 ? 2.5 : 1));
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -61,6 +76,7 @@ export default function PortfolioPage() {
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowRight') nextImage();
       if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === ' ') { e.preventDefault(); toggleZoom(); }
     };
     document.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
@@ -86,6 +102,15 @@ export default function PortfolioPage() {
       else prevImage();
     }
   };
+
+  // Scroll zoom in lightbox
+  const handleLightboxWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault();
+    setLightboxZoom((prev) => {
+      const next = prev + (e.deltaY > 0 ? -0.2 : 0.2);
+      return Math.max(1, Math.min(3, next));
+    });
+  }, []);
 
   return (
     <main>
@@ -132,15 +157,16 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* Gallery Grid */}
+      {/* Gallery Grid — Staggered entrance */}
       <section className="py-10 md:py-16">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="masonry-grid">
+          <div ref={gridRef} className="masonry-grid">
             {filtered.map((project, index) => (
               <div
                 key={project.id}
                 className="masonry-item cursor-pointer group"
                 onClick={() => openLightbox(index)}
+                data-cursor-text="View"
               >
                 <div className={`relative ${project.aspect} overflow-hidden`}>
                   <Image
@@ -166,7 +192,7 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* Lightbox */}
+      {/* Lightbox with zoom */}
       {lightboxIndex !== null && (
         <div
           className="fixed inset-0 z-[100] bg-[#0A0A0A]/95 flex items-center justify-center"
@@ -192,16 +218,45 @@ export default function PortfolioPage() {
           </button>
 
           <div
-            className="relative w-[92vw] h-[75vh] md:h-[80vh] max-w-6xl"
+            className="relative w-[92vw] h-[75vh] md:h-[80vh] max-w-6xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
+            onWheel={handleLightboxWheel}
           >
-            <Image
-              src={filtered[lightboxIndex].image.replace('w=800', 'w=1600')}
-              alt={filtered[lightboxIndex].title}
-              fill
-              className="object-contain"
-              sizes="92vw"
-            />
+            <div
+              className="w-full h-full transition-transform duration-300 ease-out"
+              style={{
+                transform: `scale(${lightboxZoom})`,
+                cursor: lightboxZoom > 1 ? 'zoom-out' : 'zoom-in',
+              }}
+            >
+              <Image
+                src={filtered[lightboxIndex].image.replace('w=800', 'w=1600')}
+                alt={filtered[lightboxIndex].title}
+                fill
+                className="object-contain"
+                sizes="92vw"
+              />
+            </div>
+
+            {/* Zoom indicator */}
+            <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-[#0A0A0A]/80 backdrop-blur-sm px-4 py-2 rounded-full">
+              <button
+                onClick={(e) => { e.stopPropagation(); setLightboxZoom((z) => Math.max(1, z - 0.5)); }}
+                className="text-[#F0F0F0]/70 hover:text-[#D4AF37] transition-colors"
+                aria-label="Zoom out"
+              >
+                <ZoomOut className="w-4 h-4" />
+              </button>
+              <span className="text-[#F0F0F0]/50 text-xs min-w-[40px] text-center">{Math.round(lightboxZoom * 100)}%</span>
+              <button
+                onClick={(e) => { e.stopPropagation(); setLightboxZoom((z) => Math.min(3, z + 0.5)); }}
+                className="text-[#F0F0F0]/70 hover:text-[#D4AF37] transition-colors"
+                aria-label="Zoom in"
+              >
+                <ZoomIn className="w-4 h-4" />
+              </button>
+            </div>
+
             <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-[#0A0A0A]/90 to-transparent text-center">
               <p className="text-[#FAFAFA] font-[family-name:var(--font-display)] font-bold text-lg md:text-xl">
                 {filtered[lightboxIndex].title}

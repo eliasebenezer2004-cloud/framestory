@@ -75,6 +75,7 @@ export default function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  data-cursor-text="Go"
                   className={`relative text-sm tracking-wide transition-colors duration-300 gold-underline ${
                     pathname === link.href
                       ? 'text-[#D4AF37] active'

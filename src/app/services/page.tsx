@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Camera, Heart, Sparkles, Frame, Image as ImageIcon, Baby } from 'lucide-react';
+import { useScrollReveal, useImageReveal, useStaggerReveal } from '@/hooks/useScrollReveal';
 
 const eventServices = [
   {
@@ -37,7 +38,7 @@ const eventServices = [
   },
 ];
 
-const products = [
+const products: { icon: typeof Frame; title: string; description: string }[] = [
   { icon: Frame, title: '4K Premium Synthetic Albums', description: 'Heirloom-quality albums with vivid prints that last generations.' },
   { icon: Baby, title: 'Baby Casting Services', description: 'Preserve tiny hands and feet in beautiful resin casts.' },
   { icon: Sparkles, title: 'Customized Light Frames', description: 'Illuminated frames that make your favourite photo glow.' },
@@ -46,6 +47,8 @@ const products = [
 ];
 
 export default function ServicesPage() {
+  const ctaRef = useScrollReveal();
+
   return (
     <main>
       {/* Hero */}
@@ -73,7 +76,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Event Coverage - Alternating Blocks */}
+      {/* Event Coverage — Alternating blocks with image clip reveals */}
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-16 md:mb-20">
@@ -89,44 +92,13 @@ export default function ServicesPage() {
 
           <div className="space-y-16 md:space-y-24">
             {eventServices.map((service, index) => (
-              <div
-                key={service.title}
-                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-              >
-                <div className={`${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                  <div className={`relative ${service.aspect} overflow-hidden`}>
-                    <Image
-                      src={service.image}
-                      alt={`${service.title} - Framestory event photography in Trichy`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      placeholder="blur"
-                      blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23121212'/%3E%3C/svg%3E"
-                    />
-                  </div>
-                </div>
-                <div className={`${index % 2 === 1 ? 'lg:order-1' : ''}`}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <Camera className="w-5 h-5 text-[#D4AF37]" />
-                    <span className="text-[#D4AF37] text-sm tracking-[0.2em] uppercase">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                  </div>
-                  <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl lg:text-4xl font-bold text-[#FAFAFA] mb-4">
-                    {service.title}
-                  </h3>
-                  <p className="text-[#F0F0F0]/60 text-lg leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-              </div>
+              <ServiceBlock key={service.title} service={service} index={index} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Physical Products Upsell */}
+      {/* Physical Products — Staggered entrance */}
       <section className="py-16 md:py-24 bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-12 md:mb-16">
@@ -144,37 +116,23 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {products.map((product) => (
-              <div
-                key={product.title}
-                className="bg-[#121212] border-t-2 border-[#D4AF37]/20 hover:border-t-[#D4AF37] p-6 md:p-8 transition-all duration-500 group"
-              >
-                <product.icon className="w-7 h-7 text-[#D4AF37] mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-bold text-[#FAFAFA] mb-2">
-                  {product.title}
-                </h3>
-                <p className="text-[#F0F0F0]/50 text-sm leading-relaxed">
-                  {product.description}
-                </p>
-              </div>
-            ))}
-          </div>
+          <ProductGrid products={products} />
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-16 md:py-24">
-        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6">
+        <div ref={ctaRef} className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6" data-reveal>
             Ready to Book?
           </h2>
-          <p className="text-[#F0F0F0]/60 text-lg mb-10">
+          <p className="text-[#F0F0F0]/60 text-lg mb-10" data-reveal>
             Let&apos;s discuss your event and create something beautiful together.
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-[#121212] font-bold text-sm tracking-wide hover:bg-[#E8C960] transition-all duration-300"
+            data-reveal
           >
             Check Availability
             <ArrowRight className="w-4 h-4" />
@@ -182,5 +140,65 @@ export default function ServicesPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function ServiceBlock({ service, index }: { service: typeof eventServices[0]; index: number }) {
+  const imageRevealRef = useImageReveal();
+  const textRef = useScrollReveal();
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      <div ref={imageRevealRef} className={`${index % 2 === 1 ? 'lg:order-2' : ''}`}>
+        <div className={`relative ${service.aspect} overflow-hidden`} data-clip-reveal>
+          <Image
+            src={service.image}
+            alt={`${service.title} - Framestory event photography in Trichy`}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23121212'/%3E%3C/svg%3E"
+          />
+        </div>
+      </div>
+      <div ref={textRef} className={`${index % 2 === 1 ? 'lg:order-1' : ''}`}>
+        <div className="flex items-center gap-3 mb-4" data-reveal>
+          <Camera className="w-5 h-5 text-[#D4AF37]" />
+          <span className="text-[#D4AF37] text-sm tracking-[0.2em] uppercase">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </div>
+        <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl lg:text-4xl font-bold text-[#FAFAFA] mb-4" data-reveal>
+          {service.title}
+        </h3>
+        <p className="text-[#F0F0F0]/60 text-lg leading-relaxed" data-reveal>
+          {service.description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ProductGrid({ products }: { products: { icon: typeof Frame; title: string; description: string }[] }) {
+  const gridRef = useStaggerReveal(0.1);
+
+  return (
+    <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      {products.map((product) => (
+        <div
+          key={product.title}
+          className="bg-[#121212] border-t-2 border-[#D4AF37]/20 hover:border-t-[#D4AF37] p-6 md:p-8 transition-all duration-500 group"
+        >
+          <product.icon className="w-7 h-7 text-[#D4AF37] mb-4 group-hover:scale-110 transition-transform duration-300" />
+          <h3 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-bold text-[#FAFAFA] mb-2">
+            {product.title}
+          </h3>
+          <p className="text-[#F0F0F0]/50 text-sm leading-relaxed">
+            {product.description}
+          </p>
+        </div>
+      ))}
+    </div>
   );
 }
