@@ -26,19 +26,21 @@ export default function AboutPage() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative h-[40vh] min-h-[300px] overflow-hidden">
+      <section className="relative h-[45vh] min-h-[320px] overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=1920&q=80"
+          src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=1920&q=85"
           alt="Framestory photography team in action at a wedding venue in Trichy"
           fill
           className="object-cover"
           priority
           sizes="100vw"
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23121212'/%3E%3C/svg%3E"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/40 to-transparent" />
         <div className="absolute inset-0 flex items-end">
-          <div className="max-w-7xl mx-auto px-6 md:px-12 pb-12">
-            <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-7xl font-bold text-[#FAFAFA]">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 pb-10 md:pb-12">
+            <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-7xl font-bold text-[#FAFAFA]">
               About Us
             </h1>
           </div>
@@ -46,21 +48,23 @@ export default function AboutPage() {
       </section>
 
       {/* Founder's Story */}
-      <section className="py-24 md:py-32">
+      <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             {/* Image */}
             <div className="relative">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
+              <div className="relative aspect-[4/5] overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80"
                   alt="Karthik Rajan, founder and lead photographer at Framestory"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23121212'/%3E%3C/svg%3E"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 border-2 border-[#D4AF37]/30 rounded-sm -z-10" />
+              <div className="hidden lg:block absolute -bottom-4 -left-4 w-24 h-24 border-2 border-[#D4AF37]/20 -z-10" />
             </div>
 
             {/* Text */}
@@ -70,7 +74,7 @@ export default function AboutPage() {
                 <span className="text-[#D4AF37] text-sm tracking-[0.3em] uppercase">The Founder&apos;s Story</span>
               </div>
 
-              <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-[#FAFAFA] mb-8 leading-tight">
+              <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-8 leading-tight">
                 Hi, I&apos;m Karthik Rajan
               </h2>
 
@@ -93,11 +97,13 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <div className="mt-8 flex items-center gap-4">
-                <div className="w-16 h-[1px] bg-[#D4AF37]/30" />
-                <span className="font-[family-name:var(--font-display)] text-[#D4AF37] italic text-lg">
+              {/* Quote */}
+              <div className="mt-10 md:mt-12 text-center lg:text-left">
+                <div className="w-16 h-[1px] bg-[#D4AF37]/30 mx-auto lg:mx-0 mb-6" />
+                <span className="font-[family-name:var(--font-display)] text-[#D4AF37] italic text-xl md:text-2xl">
                   &ldquo;Every photo should feel like coming home.&rdquo;
                 </span>
+                <div className="w-16 h-[1px] bg-[#D4AF37]/30 mx-auto lg:mx-0 mt-6" />
               </div>
             </div>
           </div>
@@ -105,29 +111,29 @@ export default function AboutPage() {
       </section>
 
       {/* Philosophy */}
-      <section className="py-24 md:py-32 bg-[#0A0A0A]">
+      <section className="py-16 md:py-24 bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 md:mb-16">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="w-8 h-[1px] bg-[#D4AF37]" />
               <span className="text-[#D4AF37] text-sm tracking-[0.3em] uppercase">Our Philosophy</span>
               <div className="w-8 h-[1px] bg-[#D4AF37]" />
             </div>
-            <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-[#FAFAFA]">
+            <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA]">
               Three Pillars of Our Craft
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {philosophy.map((item) => (
               <div
                 key={item.title}
-                className="bg-[#121212] border border-[#F0F0F0]/5 rounded-sm p-8 text-center hover:border-[#D4AF37]/20 transition-all duration-500"
+                className="bg-[#121212] border-t-2 border-[#D4AF37]/20 hover:border-t-[#D4AF37] p-6 md:p-8 text-center transition-all duration-500"
               >
-                <div className="w-16 h-16 mx-auto mb-6 bg-[#D4AF37]/10 rounded-full flex items-center justify-center">
-                  <item.icon className="w-7 h-7 text-[#D4AF37]" />
+                <div className="w-14 h-14 mx-auto mb-5 bg-[#D4AF37]/10 rounded-full flex items-center justify-center">
+                  <item.icon className="w-6 h-6 text-[#D4AF37]" />
                 </div>
-                <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-[#FAFAFA] mb-3">
+                <h3 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-bold text-[#FAFAFA] mb-3">
                   {item.title}
                 </h3>
                 <p className="text-[#F0F0F0]/50 text-sm leading-relaxed">
@@ -140,9 +146,9 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 md:py-32">
+      <section className="py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
-          <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-[#FAFAFA] mb-6">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl lg:text-5xl font-bold text-[#FAFAFA] mb-6">
             Let&apos;s Work Together
           </h2>
           <p className="text-[#F0F0F0]/60 text-lg mb-10">
@@ -150,7 +156,7 @@ export default function AboutPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-[#121212] font-bold text-sm tracking-wide rounded-sm hover:bg-[#E8C960] transition-all duration-300"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-[#121212] font-bold text-sm tracking-wide hover:bg-[#E8C960] transition-all duration-300"
           >
             Get in Touch
             <ArrowRight className="w-4 h-4" />
